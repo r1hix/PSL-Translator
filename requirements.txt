@@ -1,0 +1,24 @@
+# Deep Learning Framework
+torch
+torchvision
+
+# Computer Vision & Skeletal Tracking
+mediapipe
+opencv-python
+
+# Scientific Computing & Data Processing
+numpy
+pandas
+scipy
+scikit-learn
+
+# Visualization & Logging
+matplotlib
+seaborn
+tqdm
+pyyaml
+
+# Speech Synthesis & Audio Output
+gTTS
+pygame
+pyttsx3

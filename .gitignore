@@ -1,0 +1,27 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches and logs
+.pytest_cache/
+*.log
+
+# Large Datasets & Video Files (keep raw video out of git)
+data/raw_videos/
+data/landmarks/
+models/checkpoints/
+*.pt
+*.pth
+*.onnx
+
+# OS & Editor
+.DS_Store
+.idea/
+.vscode/
