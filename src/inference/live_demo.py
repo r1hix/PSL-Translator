@@ -109,7 +109,8 @@ class RealTimePSLTranslator:
         ckpt = checkpoint_path or (self.config.paths.checkpoints / "st_gcn_best.pth")
         if ckpt.exists():
             try:
-                state_dict = torch.load(ckpt, map_location=self.device)
+                ckpt_data = torch.load(ckpt, map_location=self.device)
+                state_dict = ckpt_data["model_state_dict"] if isinstance(ckpt_data, dict) and "model_state_dict" in ckpt_data else ckpt_data
                 self.model.load_state_dict(state_dict)
                 self.model_loaded = True
                 logger.info("Loaded trained model weights from: %s", ckpt)
