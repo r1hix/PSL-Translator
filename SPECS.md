@@ -57,6 +57,6 @@ Always inspect OS (`platform.system()`) and hardware before running tasks:
 - [x] Implement `src/training/evaluate.py`: Top-1 Accuracy, Macro-F1, per-class Confusion Matrix logging.
 
 ### Phase 6: Real-Time HUD & Spoken Urdu Engine
-- [ ] Implement `src/inference/audio_engine.py`: Pre-cache Urdu MP3s via `gTTS`, non-blocking playback via `pygame.mixer`.
-- [ ] Implement `src/inference/live_demo.py`: 30-frame rolling buffer, confidence smoothing, OpenCV bilingual HUD.
-- [ ] Benchmark real-time latency ensuring $\ge 30$ FPS throughput.
+- [x] Implement `src/inference/audio_engine.py`: Pre-cache Urdu MP3s via `gTTS`, non-blocking playback via `pygame.mixer` & native drivers.
+- [x] Implement `src/inference/live_demo.py`: 30-frame rolling buffer, confidence smoothing, OpenCV bilingual HUD.
+- [x] Benchmark real-time latency ensuring $\ge 30$ FPS throughput.

@@ -70,6 +70,19 @@ class TrainingConfig:
 
 
 @dataclass(frozen=True)
+class InferenceConfig:
+    """Settings for real-time live webcam inference and HUD."""
+    confidence_threshold: float
+    consecutive_frames_trigger: int
+    webcam_index: int
+    frame_width: int
+    frame_height: int
+    display_fps: bool
+    draw_landmarks: bool
+    audio_enabled: bool
+
+
+@dataclass(frozen=True)
 class Config:
     """Top-level unified project configuration."""
     project_name: str
@@ -78,6 +91,7 @@ class Config:
     data: DataConfig
     paths: PathsConfig
     training: TrainingConfig
+    inference: InferenceConfig
     raw_dict: dict[str, Any]
 
     @property
@@ -179,6 +193,18 @@ def load_config(config_path: Optional[Path] = None) -> Config:
         seed=train_dict["seed"],
     )
 
+    inf_dict = raw.get("inference", {})
+    inf_cfg = InferenceConfig(
+        confidence_threshold=float(inf_dict.get("confidence_threshold", 0.75)),
+        consecutive_frames_trigger=int(inf_dict.get("consecutive_frames_trigger", 5)),
+        webcam_index=int(inf_dict.get("webcam_index", 0)),
+        frame_width=int(inf_dict.get("frame_width", 1280)),
+        frame_height=int(inf_dict.get("frame_height", 720)),
+        display_fps=bool(inf_dict.get("display_fps", True)),
+        draw_landmarks=bool(inf_dict.get("draw_landmarks", True)),
+        audio_enabled=bool(inf_dict.get("audio_enabled", True)),
+    )
+
     return Config(
         project_name=raw["project"]["name"],
         version=raw["project"]["version"],
@@ -186,5 +212,6 @@ def load_config(config_path: Optional[Path] = None) -> Config:
         data=data_cfg,
         paths=paths_cfg,
         training=train_cfg,
+        inference=inf_cfg,
         raw_dict=raw,
     )

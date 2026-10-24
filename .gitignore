@@ -13,13 +13,15 @@ __pycache__/
 .pytest_cache/
 *.log
 
-# Large Datasets & Video Files (keep raw video out of git)
+# Large Datasets & Video/Audio Files (keep raw media out of git)
 data/raw_videos/
 data/landmarks/
+data/audio_cache/
 models/checkpoints/
 *.pt
 *.pth
 *.onnx
+*.mp3
 
 # OS & Editor
 .DS_Store
