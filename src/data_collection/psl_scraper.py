@@ -37,13 +37,14 @@ DIRECT_WORD_MAP: Dict[str, str] = {
     "khana": "/dictionary/36-food-general/1792-food",
     "ghar": "/dictionary/20-buildings-places/1004-house",
     "madad": "/dictionary/72-verbs/4553-help",
-    "theek": "/dictionary/1-adjectives/5661-okay",
-    "shukriya": "/dictionary/65-sentences/4172-thank-you",
+    "theek": "/dictionary/65-sentences/7514-it-is-fine.",
+    "shukriya": "/dictionary/65-sentences/4369-thank-you",
     "salam": "/dictionary/83-islamic-signs/7924-assalam-o-alaikum",
     "khuda_hafiz": "/dictionary/65-sentences/4122-good-bye",
-    "haan": "/dictionary/65-sentences/4198-yes",
+    "haan": "/dictionary/65-sentences/4396-yes",
     "nahi": "/dictionary/65-sentences/4155-no",
     "aap_kaise_hain": "/dictionary/65-sentences/4130-how-are-you",
+
 }
 
 

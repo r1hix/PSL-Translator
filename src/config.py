@@ -21,6 +21,9 @@ class VocabularyItem:
     name: str
     urdu: str
     roman: str
+    sentence_en: str
+    sentence_ur: str
+    sentence_roman: str
     category: str
 
 
@@ -122,6 +125,9 @@ def load_config(config_path: Optional[Path] = None) -> Config:
             name=v["name"],
             urdu=v["urdu"],
             roman=v["roman"],
+            sentence_en=v.get("sentence_en", v["roman"]),
+            sentence_ur=v.get("sentence_ur", v["urdu"]),
+            sentence_roman=v.get("sentence_roman", v["roman"]),
             category=v["category"],
         )
         for v in raw["vocabulary"]
