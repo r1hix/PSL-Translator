@@ -40,9 +40,10 @@ Always inspect OS (`platform.system()`) and hardware before running tasks:
 
 
 ### Phase 3: Landmark Extraction & Normalization
-- [ ] Implement `src/preprocessing/extract_landmarks.py`: MediaPipe Holistic 55-keypoint extractor.
-- [ ] Implement `src/preprocessing/normalize.py`: Translation centering, shoulder scale normalization, hand imputation.
-- [ ] Implement batch extractor converting raw MP4s to `.npy` $(30, 55, 3)$ files.
+- [x] Implement `src/preprocessing/extract_landmarks.py`: MediaPipe Holistic 55-keypoint extractor.
+- [x] Implement `src/preprocessing/normalize.py`: Translation centering, shoulder scale normalization, hand imputation.
+- [x] Implement batch extractor converting raw MP4s to `.npy` $(30, 55, 3)$ files.
+
 
 ### Phase 4: Model Modeling (ST-GCN + Bi-LSTM)
 - [ ] Implement `src/models/graph.py`: 55-node skeletal adjacency matrix $A$ (intra-hand + upper body bones).
