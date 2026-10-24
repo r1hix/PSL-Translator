@@ -117,3 +117,57 @@ project/
 * **Weeks 8–9 (Ablation & Optimization):** Benchmark ST-GCN vs. baselines; test noise robustness; generate confusion matrices and classification reports.
 * **Weeks 10–11 (Live HUD & Audio Engine):** Build real-time webcam inference engine with OpenCV HUD overlay and low-latency Urdu speech playback.
 * **Week 12 (Final Report & Viva Defense):** Perform in-person live demonstration, finalize academic report, and deliver presentation.
+
+---
+
+## ⚡ Quick Start & CLI Usage
+
+### 1. Installation
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 2. End-to-End System Audit
+Run the automated 7-step verification audit verifying all models, skeletal graph, and pipeline modules:
+```bash
+python test_pipeline.py
+```
+
+### 3. Real-Time Live Webcam Demonstration
+Launch the interactive bilingual HUD and spoken Urdu audio engine:
+```bash
+python -m src.inference.live_demo
+```
+* **Interactive Hotkeys:**
+  * `[Q]`: Quit live demonstration
+  * `[F]`: Toggle Camera Mirror Flip
+  * `[M]`: Toggle Audio Mute / Unmute
+  * `[L]`: Toggle Language Mode (Bilingual / Urdu / English)
+  * `[S]`: Toggle Phrasing Style (Communicative Sentence vs Literal Sign)
+  * `[D]`: Toggle Landmark Skeletal Wireframe Overlay
+
+### 4. Data Collection & Preprocessing
+```bash
+# Download official 720p PSL video demonstrations
+python -m src.data_collection.psl_scraper
+
+# Audit raw dataset health & integrity
+python -m src.data_collection.verify_data
+
+# Batch extract 55-keypoint normalized tensors (30, 55, 3)
+python -m src.preprocessing.batch_extractor
+```
+
+### 5. Model Training & Evaluation
+```bash
+# Train ST-GCN network
+python -m src.training.train --model st_gcn --epochs 40
+
+# Train Bi-LSTM academic baseline
+python -m src.training.train --model baseline_lstm --epochs 40
+
+# Generate Confusion Matrix and classification metrics
+python -m src.training.evaluate --checkpoint models/checkpoints/st_gcn_best.pth
+```

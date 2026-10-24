@@ -277,6 +277,7 @@ def run_live_webcam(
     webcam_index: int = 0,
     video_source: Optional[str] = None,
     checkpoint: Optional[str] = None,
+    flip_camera: Optional[bool] = None,
 ) -> None:
     """Runs the live interactive OpenCV webcam inference application."""
     config = load_config()
@@ -296,6 +297,9 @@ def run_live_webcam(
     window_name = f"Pakistani Sign Language (PSL) Real-Time Translator - [{platform.system()}]"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
+    # By default, flip live webcam stream for natural mirror view; do not flip video files
+    should_flip = (video_source is None) if flip_camera is None else flip_camera
+
     prev_time = time.time()
     fps = 0.0
 
@@ -303,6 +307,7 @@ def run_live_webcam(
     print("  PSL REAL-TIME TRANSLATOR -- INTERACTIVE CONTROLS")
     print("=" * 80)
     print("  [Q] : Quit live demonstration")
+    print("  [F] : Toggle Camera Horizontal Flip (Mirror View)")
     print("  [M] : Toggle Audio Mute / Unmute")
     print("  [L] : Toggle Language Mode (Bilingual -> Urdu -> English)")
     print("  [S] : Toggle Sentence Style (Communicative Sentence <-> Literal Word)")
@@ -316,6 +321,10 @@ def run_live_webcam(
                 logger.info("Video stream ended or frame unavailable.")
                 break
 
+            # Apply horizontal mirror flip if enabled
+            if should_flip:
+                frame = cv2.flip(frame, 1)
+
             # Process frame through ST-GCN & HUD pipeline
             rendered, _ = translator.process_frame(frame)
 
@@ -323,13 +332,17 @@ def run_live_webcam(
             curr_time = time.time()
             fps = 0.9 * fps + 0.1 * (1.0 / max(1e-4, curr_time - prev_time))
             prev_time = curr_time
-            cv2.putText(rendered, f"FPS: {fps:.1f}", (rendered.shape[1] - 250, 32), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 120), 1, cv2.LINE_AA)
+            flip_tag = " [FLIPPED]" if should_flip else ""
+            cv2.putText(rendered, f"FPS: {fps:.1f}{flip_tag}", (rendered.shape[1] - 270, 32), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 120), 1, cv2.LINE_AA)
 
             cv2.imshow(window_name, rendered)
             key = cv2.waitKey(1) & 0xFF
 
             if key == ord("q"):
                 break
+            elif key == ord("f"):
+                should_flip = not should_flip
+                logger.info("Camera flip toggled: %s", "MIRROR (FLIPPED)" if should_flip else "NORMAL (UNFLIPPED)")
             elif key == ord("m"):
                 translator.audio_engine.enabled = not translator.audio_engine.enabled
                 logger.info("Audio toggled: %s", "ENABLED" if translator.audio_engine.enabled else "MUTED")
@@ -358,6 +371,13 @@ if __name__ == "__main__":
     parser.add_argument("--webcam", type=int, default=0, help="Webcam device index (default: 0)")
     parser.add_argument("--video", type=str, default=None, help="Optional raw video file path to test instead of webcam")
     parser.add_argument("--checkpoint", type=str, default=None, help="Path to trained PyTorch model weights (.pth)")
+    parser.add_argument("--flip", action="store_true", default=None, help="Force mirror/flip camera horizontally.")
+    parser.add_argument("--no-flip", action="store_false", dest="flip", help="Disable camera horizontal flip.")
     args = parser.parse_args()
 
-    run_live_webcam(webcam_index=args.webcam, video_source=args.video, checkpoint=args.checkpoint)
+    run_live_webcam(
+        webcam_index=args.webcam,
+        video_source=args.video,
+        checkpoint=args.checkpoint,
+        flip_camera=args.flip,
+    )
