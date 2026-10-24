@@ -46,9 +46,10 @@ Always inspect OS (`platform.system()`) and hardware before running tasks:
 
 
 ### Phase 4: Model Modeling (ST-GCN + Bi-LSTM)
-- [ ] Implement `src/models/graph.py`: 55-node skeletal adjacency matrix $A$ (intra-hand + upper body bones).
-- [ ] Implement `src/models/st_gcn.py`: Spatial Graph Conv + Temporal Conv blocks $(N, 3, 30, 55)$.
-- [ ] Implement `src/models/baseline_lstm.py`: Bi-LSTM baseline for academic viva comparison.
+- [x] Implement `src/models/graph.py`: 55-node skeletal adjacency matrix $A$ (intra-hand + upper body bones).
+- [x] Implement `src/models/st_gcn.py`: Spatial Graph Conv + Temporal Conv blocks $(N, 3, 30, 55)$.
+- [x] Implement `src/models/baseline_lstm.py`: Bi-LSTM baseline for academic viva comparison.
+
 
 ### Phase 5: Training & Validation Pipeline
 - [ ] Implement `src/training/dataset.py`: PyTorch `Dataset` with subject-split cross validation.
