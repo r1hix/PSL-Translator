@@ -25,3 +25,4 @@ models/checkpoints/
 .DS_Store
 .idea/
 .vscode/
+desktop.ini

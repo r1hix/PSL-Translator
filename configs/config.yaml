@@ -1,0 +1,182 @@
+# ==============================================================================
+# Real-Time Pakistani Sign Language (PSL) Translator Configuration
+# ==============================================================================
+
+project:
+  name: "PSL-Translator"
+  version: "0.1.0"
+  description: "Coordinate-space Real-Time PSL to Urdu text and speech translator"
+
+# ------------------------------------------------------------------------------
+# Target Vocabulary (15 High-Frequency Core Dynamic Signs)
+# ------------------------------------------------------------------------------
+vocabulary:
+  - id: 0
+    name: "salam"
+    urdu: "السلام علیکم"
+    roman: "Assalam-o-Alaikum"
+    category: "greetings"
+  - id: 1
+    name: "shukriya"
+    urdu: "شکریہ"
+    roman: "Shukriya"
+    category: "greetings"
+  - id: 2
+    name: "aap_kaise_hain"
+    urdu: "آپ کیسے ہیں؟"
+    roman: "Aap Kaise Hain"
+    category: "greetings"
+  - id: 3
+    name: "theek"
+    urdu: "ٹھیک"
+    roman: "Theek"
+    category: "greetings"
+  - id: 4
+    name: "khuda_hafiz"
+    urdu: "خدا حافظ"
+    roman: "Khuda Hafiz"
+    category: "greetings"
+  - id: 5
+    name: "pani"
+    urdu: "پانی"
+    roman: "Pani"
+    category: "essentials"
+  - id: 6
+    name: "khana"
+    urdu: "کھانا"
+    roman: "Khana"
+    category: "essentials"
+  - id: 7
+    name: "ghar"
+    urdu: "گھر"
+    roman: "Ghar"
+    category: "essentials"
+  - id: 8
+    name: "madad"
+    urdu: "مدد"
+    roman: "Madad"
+    category: "essentials"
+  - id: 9
+    name: "haan"
+    urdu: "ہاں"
+    roman: "Haan"
+    category: "essentials"
+  - id: 10
+    name: "nahi"
+    urdu: "نہیں"
+    roman: "Nahi"
+    category: "essentials"
+  - id: 11
+    name: "doctor"
+    urdu: "ڈاکٹر"
+    roman: "Doctor"
+    category: "emergency"
+  - id: 12
+    name: "dard"
+    urdu: "درد"
+    roman: "Dard"
+    category: "emergency"
+  - id: 13
+    name: "dawa"
+    urdu: "دوا"
+    roman: "Dawa"
+    category: "emergency"
+  - id: 14
+    name: "hospital"
+    urdu: "ہسپتال"
+    roman: "Hospital"
+    category: "emergency"
+
+# ------------------------------------------------------------------------------
+# Tensor Contract & Landmark Geometry
+# ------------------------------------------------------------------------------
+data:
+  fps: 30
+  sequence_length: 30       # T = 30 frames (1.0 sec window)
+  num_nodes: 55             # V = 55 skeletal joints
+  num_channels: 3          # C = 3 coordinates (x, y, z)
+  
+  # MediaPipe Holistic Index Mapping
+  nodes:
+    left_hand:
+      count: 21
+      start_idx: 0
+      end_idx: 20
+    right_hand:
+      count: 21
+      start_idx: 21
+      end_idx: 41
+    upper_body_pose:
+      count: 13
+      start_idx: 42
+      end_idx: 54
+      # Selected 13 keypoints from MediaPipe 33-pose set:
+      # [0: Nose, 2: Left Eye, 5: Right Eye, 7: Left Ear, 8: Right Ear,
+      #  11: Left Shoulder, 12: Right Shoulder, 13: Left Elbow, 14: Right Elbow,
+      #  15: Left Wrist, 16: Right Wrist, 23: Left Hip, 24: Right Hip]
+      pose_indices: [0, 2, 5, 7, 8, 11, 12, 13, 14, 15, 16, 23, 24]
+
+  normalization:
+    root_joint: "chest"     # Midpoint between left shoulder (idx 47 in 55-node array) and right shoulder (idx 48)
+    scale_reference: "shoulder_distance" # Euclidean distance between left and right shoulder
+    epsilon: 1e-6
+
+# ------------------------------------------------------------------------------
+# Repository File Paths (relative to project root)
+# ------------------------------------------------------------------------------
+paths:
+  raw_videos_dir: "data/raw_videos"
+  landmarks_dir: "data/landmarks"
+  audio_cache_dir: "data/audio_cache"
+  checkpoints_dir: "models/checkpoints"
+  logs_dir: "logs"
+
+# ------------------------------------------------------------------------------
+# Model Hyperparameters
+# ------------------------------------------------------------------------------
+model:
+  architecture: "st_gcn"    # Options: st_gcn, baseline_lstm
+  st_gcn:
+    in_channels: 3
+    num_classes: 15
+    graph_layout: "psl_55"
+    graph_strategy: "spatial"
+    edge_importance_weighting: true
+    hidden_channels: [64, 64, 128, 128, 256, 256]
+    dropout: 0.3
+  baseline_lstm:
+    input_size: 165         # Flattened 55 joints * 3 coords = 165
+    hidden_size: 128
+    num_layers: 2
+    bidirectional: true
+    dropout: 0.3
+    num_classes: 15
+
+# ------------------------------------------------------------------------------
+# Training Hyperparameters (Hardware Optimized for GTX 1660 Super 6GB VRAM)
+# ------------------------------------------------------------------------------
+training:
+  batch_size: 32            # 32 or 64 fits well within 6GB VRAM
+  epochs: 50
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  lr_step_milestones: [25, 40]
+  lr_gamma: 0.1
+  use_amp: true             # Automatic Mixed Precision (FP16) on CUDA
+  num_workers: 2
+  validation_split: 0.2
+  subject_split: true       # Ensure test signers are unseen in training
+  seed: 42
+
+# ------------------------------------------------------------------------------
+# Real-Time Inference & HUD Parameters
+# ------------------------------------------------------------------------------
+inference:
+  confidence_threshold: 0.75
+  consecutive_frames_trigger: 5
+  webcam_index: 0
+  frame_width: 1280
+  frame_height: 720
+  display_fps: true
+  draw_landmarks: true
+  audio_enabled: true

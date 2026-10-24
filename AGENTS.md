@@ -1,7 +1,6 @@
 # AGENTS.md — Developer & AI Agent Guidelines
 
 > **Project:** Real-Time Pakistani Sign Language (PSL) Translator  
-> **Course:** CS4523 Artificial Intelligence Lab  
 > **Target Framework:** PyTorch, MediaPipe Holistic, OpenCV, Spatial-Temporal Graph Convolutional Networks (ST-GCN)
 
 ---
@@ -134,3 +133,23 @@ Before submitting changes or marking tasks as complete, agents must verify:
 * ❌ **Do NOT use OpenPose** when MediaPipe Holistic is specified. MediaPipe is significantly lighter, faster on CPU/webcam, and does not require complex C++ compilation.
 * ❌ **Do NOT randomize cross-validation without subject splitting** if multiple recordings come from the same person. Ensure validation splits evaluate generalization to unseen signers.
 * ❌ **Do NOT over-complicate the vocabulary.** Stick strictly to the selected 15–20 high-frequency words defined in `configs/config.yaml`.
+
+---
+
+## 💻 8. Multi-Machine Awareness & Git Protocol
+
+### 1. Dual-Rig Environment Awareness
+Agents must inspect current operating system, Python environment, and GPU accelerator at the start of any workload:
+* **Training Rig (Windows PC, AMD Ryzen 5 5600 + NVIDIA GTX 1660 Super):**
+  * Target for: Heavy batch training, FP16 AMP optimization, mass video landmark extraction.
+  * GPU: `cuda` (6GB VRAM limit — batch size $\le 64$).
+* **Inference Rig (Apple MacBook Pro, M2 2023):**
+  * Target for: Live real-time webcam demonstrations, OpenCV HUD testing, lightweight MPS inference.
+  * GPU: `mps` / `cpu`.
+* **Switch Recommendation Rule:** If the user initiates a heavy training run on MacBook or requests a live hardware webcam demo on a headless/non-webcam PC environment, the agent **must alert the user** and suggest switching to the appropriate machine.
+
+### 2. Git Workflow & Branch Conventions
+* **Feature Branches Mandatory:** Never commit directly to `main`. Always create and work on dedicated feature branches: `git checkout -b feature/<feature-name>`.
+* **Commit Conventions:** Follow standard conventional commit prefixes (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`).
+* **Strict Merge Guard:** **NEVER** merge any branch into `main` unless the user explicitly requests merging in that very prompt.
+
