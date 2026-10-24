@@ -7,9 +7,19 @@ Exports:
     - build_model: Architecture factory utility.
 """
 
-from src.models.baseline_lstm import BaselineBiLSTM
+from typing import Any
 from src.models.graph import PSLGraph
-from src.models.st_gcn import STGCN, build_model
+
+
+def __getattr__(name: str) -> Any:
+    if name == "BaselineBiLSTM":
+        from src.models.baseline_lstm import BaselineBiLSTM
+        return BaselineBiLSTM
+    elif name in ("STGCN", "build_model"):
+        from src.models.st_gcn import STGCN, build_model
+        return STGCN if name == "STGCN" else build_model
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 __all__ = [
     "PSLGraph",

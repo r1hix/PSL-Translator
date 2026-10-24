@@ -52,9 +52,9 @@ Always inspect OS (`platform.system()`) and hardware before running tasks:
 
 
 ### Phase 5: Training & Validation Pipeline
-- [ ] Implement `src/training/dataset.py`: PyTorch `Dataset` with subject-split cross validation.
-- [ ] Implement `src/training/train.py`: FP16 AMP training loop, loss functions, learning rate scheduler.
-- [ ] Implement `src/training/evaluate.py`: Top-1 Accuracy, Macro-F1, per-class Confusion Matrix logging.
+- [x] Implement `src/training/dataset.py`: PyTorch `Dataset` with subject-split cross validation & coordinate augmentations.
+- [x] Implement `src/training/train.py`: FP16 AMP training loop, loss functions, learning rate scheduler.
+- [x] Implement `src/training/evaluate.py`: Top-1 Accuracy, Macro-F1, per-class Confusion Matrix logging.
 
 ### Phase 6: Real-Time HUD & Spoken Urdu Engine
 - [ ] Implement `src/inference/audio_engine.py`: Pre-cache Urdu MP3s via `gTTS`, non-blocking playback via `pygame.mixer`.

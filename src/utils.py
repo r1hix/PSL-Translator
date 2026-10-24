@@ -113,3 +113,7 @@ def validate_workload_rig(workload: str) -> Tuple[bool, str]:
             return True, "Inference running on CPU. Real-time 30 FPS HUD supported via MediaPipe."
 
     return True, "Host environment verified."
+
+
+# Compatibility alias
+validate_environment = validate_workload_rig
