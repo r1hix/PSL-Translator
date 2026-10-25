@@ -73,13 +73,18 @@ class TrainingConfig:
 class InferenceConfig:
     """Settings for real-time live webcam inference and HUD."""
     confidence_threshold: float
+    confidence_margin: float
     consecutive_frames_trigger: int
+    motion_threshold: float
+    min_hand_frames: int
     webcam_index: int
     frame_width: int
     frame_height: int
     display_fps: bool
     draw_landmarks: bool
     audio_enabled: bool
+    mirror_display: bool
+    show_debug_panel: bool
 
 
 @dataclass(frozen=True)
@@ -196,13 +201,18 @@ def load_config(config_path: Optional[Path] = None) -> Config:
     inf_dict = raw.get("inference", {})
     inf_cfg = InferenceConfig(
         confidence_threshold=float(inf_dict.get("confidence_threshold", 0.75)),
-        consecutive_frames_trigger=int(inf_dict.get("consecutive_frames_trigger", 5)),
+        confidence_margin=float(inf_dict.get("confidence_margin", 0.15)),
+        consecutive_frames_trigger=int(inf_dict.get("consecutive_frames_trigger", 4)),
+        motion_threshold=float(inf_dict.get("motion_threshold", 0.005)),
+        min_hand_frames=int(inf_dict.get("min_hand_frames", 6)),
         webcam_index=int(inf_dict.get("webcam_index", 0)),
         frame_width=int(inf_dict.get("frame_width", 1280)),
         frame_height=int(inf_dict.get("frame_height", 720)),
         display_fps=bool(inf_dict.get("display_fps", True)),
         draw_landmarks=bool(inf_dict.get("draw_landmarks", True)),
         audio_enabled=bool(inf_dict.get("audio_enabled", True)),
+        mirror_display=bool(inf_dict.get("mirror_display", True)),
+        show_debug_panel=bool(inf_dict.get("show_debug_panel", True)),
     )
 
     return Config(
