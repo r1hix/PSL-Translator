@@ -142,13 +142,32 @@ python -m src.inference.live_demo
 ```
 * **Interactive Hotkeys:**
   * `[Q]`: Quit live demonstration
-  * `[F]`: Toggle Camera Mirror Flip
+  * `[Tab]`: Toggle Live Telemetry Debug Panel (Kinetic Energy & Top-5 Probabilities)
+  * `[F]`: Toggle Camera Mirror Flip (Visual mirror while keeping optical extraction unmirrored)
   * `[M]`: Toggle Audio Mute / Unmute
   * `[L]`: Toggle Language Mode (Bilingual / Urdu / English)
   * `[S]`: Toggle Phrasing Style (Communicative Sentence vs Literal Sign)
   * `[D]`: Toggle Landmark Skeletal Wireframe Overlay
+  * `[C]`: Clear Active Translation Banner
 
-### 4. Data Collection & Preprocessing
+### 4. Skeletal Diagnostic & Model Debugger
+Run the standalone forensic debugger with frame-by-frame pause/step, joint node IDs (0..54), and telemetry snapshot dumping:
+```bash
+# Debug live webcam stream
+python -m src.inference.debug_tool
+
+# Debug a specific raw video file with frame stepping
+python -m src.inference.debug_tool --video data/raw_videos/salam/psl_portal_4268-assalam-o-alaikum.mp4
+```
+* **Debugger Hotkeys:**
+  * `[Space]`: Pause / Resume execution
+  * `[.]` or `[>]`: Step forward exactly 1 frame (when paused)
+  * `[N]`: Toggle skeletal joint node ID numbers (0 to 54)
+  * `[B]`: Toggle hand bounding boxes with centroid tracking
+  * `[S]`: Save synchronized snapshot (image + landmarks array + telemetry JSON to `logs/debug_snapshots/`)
+  * `[Q]`: Quit and print academic session summary report
+
+### 5. Data Collection & Preprocessing
 ```bash
 # Download official 720p PSL video demonstrations
 python -m src.data_collection.psl_scraper
@@ -160,7 +179,7 @@ python -m src.data_collection.verify_data
 python -m src.preprocessing.batch_extractor
 ```
 
-### 5. Model Training & Evaluation
+### 6. Model Training & Evaluation
 ```bash
 # Train ST-GCN network
 python -m src.training.train --model st_gcn --epochs 40

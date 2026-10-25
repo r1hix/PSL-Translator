@@ -144,8 +144,32 @@ def run_checks() -> bool:
         print(f"      [FAIL] Translation layer failed: {e}")
         return False
 
+    # 8. Motion Gating & Diagnostic Engine
+    print("\n[8/8] Testing Motion Gating, Hand Presence Gating & Diagnostic Engine...")
+    try:
+        from src.inference.live_demo import RealTimePSLTranslator
+        from src.inference.debug_tool import PSLDiagnosticSession
+
+        demo_translator = RealTimePSLTranslator(config=cfg)
+        # Test stationary / idle zeros
+        for _ in range(30):
+            demo_translator.buffer.append(np.zeros((55, 3), dtype=np.float32))
+        motion, hands, _, _ = demo_translator.compute_motion_and_presence()
+        assert hands == 0, f"Expected 0 hand frames for empty buffer, got {hands}"
+        assert motion == 0.0, f"Expected 0.0 motion for empty buffer, got {motion}"
+
+        # Test diagnostic session
+        diag = PSLDiagnosticSession(config=cfg)
+        dummy_frame = np.zeros((720, 1280, 3), dtype=np.uint8)
+        diag_res = diag.analyze_frame(dummy_frame)
+        assert diag_res["gate_open"] is False, "Gate should be closed for black empty frame"
+        print(f"      [OK] Idle gating successfully suppressed empty inputs. Gate closed.")
+    except Exception as e:
+        print(f"      [FAIL] Motion gating test failed: {e}")
+        return False
+
     print("\n" + "=" * 80)
-    print("  ALL 7 SYSTEM MODULES PASSED VERIFICATION WITH ZERO ERRORS!")
+    print("  ALL 8 SYSTEM MODULES PASSED VERIFICATION WITH ZERO ERRORS!")
     print("=" * 80)
     return True
 

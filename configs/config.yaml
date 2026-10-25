@@ -219,10 +219,15 @@ training:
 # ------------------------------------------------------------------------------
 inference:
   confidence_threshold: 0.75
-  consecutive_frames_trigger: 5
+  confidence_margin: 0.15          # Top-1 minus Top-2 confidence margin required
+  consecutive_frames_trigger: 4   # Consecutive consistent frames required to trigger
+  motion_threshold: 0.005         # Minimum hand motion kinetic energy to exit IDLE state
+  min_hand_frames: 6              # Minimum frames in 30-frame buffer with detected hands
   webcam_index: 0
   frame_width: 1280
   frame_height: 720
   display_fps: true
   draw_landmarks: true
   audio_enabled: true
+  mirror_display: true            # Visual mirror display while keeping optical extraction unmirrored
+  show_debug_panel: true          # Real-time top-5 probabilities and kinetic energy overlay
